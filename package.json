@@ -1,0 +1,34 @@
+{
+  "name": "lyrix",
+  "version": "0.1.0",
+  "description": "Open source lyrics translation platform",
+  "keywords": [
+    "music",
+    "lyrics",
+    "translation"
+  ],
+  "homepage": "https://github.com/debangshu919/lyrix#readme",
+  "bugs": {
+    "url": "https://github.com/debangshu919/lyrix/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/debangshu919/lyrix.git"
+  },
+  "license": "MIT",
+  "author": "Debangshu Das",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "typescript": "^7.0.2"
+  },
+  "packageManager": "pnpm@11.18.0"
+}
