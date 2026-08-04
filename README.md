@@ -1,8 +1,10 @@
 <div align="center">
+<img width="1983" height="793" alt="Lyrix-banner" src="https://github.com/user-attachments/assets/db378279-97d5-4014-8bd5-075b5c68abf0" />
+
 
 # Lyrix
 
-**Multi-provider lyrics retrieval with AI-powered translation, caching, and type-safe APIs.**
+### Multi-provider lyrics retrieval with AI-powered translation, caching, and type-safe APIs.
 
 [![CI](https://img.shields.io/github/actions/workflow/status/debangshu919/lyrix/ci.yml?style=flat-square&branch=main)](https://github.com/debangshu919/lyrix/actions)
 [![License](https://img.shields.io/github/license/debangshu919/lyrix?style=flat-square)](LICENSE)
