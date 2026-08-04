@@ -24,7 +24,7 @@ export class MetadataService {
   }
 
   private static async getTrackMetadataFromUrl(url: string): Promise<TrackMetadata | null> {
-    const entity = await mbApi.lookupUrl(url);
+    const entity = await mbApi.lookupUrl(url, ["recording-rels"]);
 
     const recordingId = entity.relations
       ?.find(r => r.recording)
@@ -49,7 +49,7 @@ export class MetadataService {
 
   private static async getTrackMetadataFromArtisNameAndTrackName(trackName: string, artistName: string): Promise<TrackMetadata | null> {
     const result = await mbApi.search("recording", {
-      query: `recording:${trackName} AND artist:${artistName}`,
+      query: `recording:"${trackName}" AND artist:"${artistName}"`,
     });
     if (result.recordings.length === 0) return null;
     const recording = result.recordings[0]!;
@@ -63,7 +63,7 @@ export class MetadataService {
 
   private static async getTrackMetadataFromTrackName(trackName: string): Promise<TrackMetadata | null> {
     const result = await mbApi.search("recording", {
-      query: `recording:${trackName}`,
+      query: `recording:"${trackName}"`,
     });
     if (result.recordings.length === 0) return null;
     const recording = result.recordings[0]!;

@@ -27,7 +27,7 @@
     "format": "biome format --write src tests",
     "lint": "biome check src tests",
     "check": "biome check --write src tests",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "pnpm build && node --test tests/unit/*.test.mjs tests/metadata.test.mjs tests/lyrics.test.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.6",
