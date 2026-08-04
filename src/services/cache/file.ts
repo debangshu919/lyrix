@@ -2,9 +2,17 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { CacheAdapter } from "./adapter";
 
+/**
+ * File-based cache adapter. Stores cached entries as JSON files in a
+ * directory (defaults to `.lyrix-cache/`). This is the default adapter
+ * when `cache: true` is set in `LyrixClientConfig`.
+ */
 export class FileCacheAdapter implements CacheAdapter {
 	private readonly dir: string;
 
+	/**
+	 * @param dir - Directory to store cache files. Defaults to `.lyrix-cache/`.
+	 */
 	constructor(dir: string = ".lyrix-cache") {
 		this.dir = path.resolve(dir);
 	}

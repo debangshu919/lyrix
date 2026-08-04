@@ -62,4 +62,8 @@ class LrcLibProvider implements LyricsProvider {
 	}
 }
 
+/**
+ * Built-in LRCLIB lyrics provider. Queries synced and unsynced lyrics
+ * from [lrclib.net](https://lrclib.net).
+ */
 export const provider = new LrcLibProvider();

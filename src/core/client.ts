@@ -21,16 +21,34 @@ function resolveCacheAdapter(
 	return cache;
 }
 
+/**
+ * Client for fetching lyrics with optional translation and caching.
+ *
+ * @example
+ * ```ts
+ * const client = new LyrixClient({
+ *   providers: [lrclibProvider],
+ *   cache: true,
+ * });
+ * const result = await client.getLyrics({
+ *   trackName: "Bohemian Rhapsody",
+ *   artistName: "Queen",
+ * });
+ * ```
+ */
 export class LyrixClient {
 	private readonly providers: LyricsProvider[];
 	private readonly cache: CacheAdapter | null;
 
+	/**
+	 * @param config - Client configuration with providers and optional cache settings.
+	 */
 	constructor(config: LyrixClientConfig) {
 		this.providers = config.providers;
 		this.cache = resolveCacheAdapter(config.cache);
 	}
 
-	/*
+	/**
 	 * Resolves track metadata, serving and storing it in the cache when
 	 * caching is enabled.
 	 */
@@ -51,7 +69,7 @@ export class LyrixClient {
 		return metadata;
 	}
 
-	/*
+	/**
 	 * Fetches lyrics from a single provider, serving and storing them in
 	 * the cache when caching is enabled. Provider failures return null so
 	 * the caller can move on to the next provider.
@@ -84,7 +102,7 @@ export class LyrixClient {
 		return result;
 	}
 
-	/*
+	/**
 	 * Attaches translated lines to the lyrics result, keeping the originals.
 	 * Synced translations keep their timestamps and the plain translated
 	 * lyrics are derived from them, so timestamps and plain lines stay
@@ -108,7 +126,7 @@ export class LyrixClient {
 		return { ...result, translatedLyrics: translated };
 	}
 
-	/*
+	/**
 	 * Applies translation to the lyrics result when requested. Synced and
 	 * unsynced lyrics share one translation cache entry keyed by the line
 	 * texts, languages and model.
@@ -157,16 +175,20 @@ export class LyrixClient {
 		return this.withTranslatedLines(result, translated);
 	}
 
-	/*
-	 * Retrieves lyrics for the given query from the configured providers.
-	 * @param query The lyrics query.
-	 * @returns A promise that resolves to an array of lyrics lines.
+	/**
+	 * Retrieves lyrics for a track from the configured providers.
+	 * Tries each provider in order until lyrics are found.
+	 *
+	 * @param track - Track to find lyrics for.
+	 * @param options - Options for sync lyrics and translation.
+	 * @returns The lyrics result with optional translations.
+	 * @throws {NoLyricsFoundError} When no provider has lyrics for the track.
+	 * @throws {TranslationError} When translation is requested but not configured.
 	 */
 	async getLyrics(
 		track: Track,
 		options?: LyricsOptions,
 	): Promise<LyricsResult> {
-		// Fetch track metadata
 		const metadata = await this.getMetadata(track);
 		if (!metadata)
 			throw new NoLyricsFoundError(
@@ -174,7 +196,6 @@ export class LyrixClient {
 				track.artistName ?? "unknown",
 			);
 
-		// Use the track metadata to fetch lyrics
 		for (const provider of this.providers) {
 			const result = await this.getLyricsFromProvider(
 				provider,
@@ -182,7 +203,6 @@ export class LyrixClient {
 				options,
 			);
 
-			// Translate the lyrics if requested, then return
 			if (result) return this.applyTranslation(result, options);
 		}
 		throw new NoLyricsFoundError(

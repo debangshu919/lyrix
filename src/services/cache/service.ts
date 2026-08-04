@@ -3,10 +3,6 @@ import type { CacheAdapter, CacheEntry } from "./adapter";
 const CACHE_VERSION = 1;
 
 export class CacheService {
-	/*
-	 * Reads and parses a cached value. Missing, corrupt, or differently
-	 * versioned entries are treated as cache misses.
-	 */
 	public static async get<T>(
 		adapter: CacheAdapter,
 		key: string,

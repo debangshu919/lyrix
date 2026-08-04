@@ -6,11 +6,6 @@ function sha256(input: string): string {
 }
 
 export class CacheKeys {
-	/*
-	 * Builds a cache key for the track metadata lookup. The query is
-	 * normalized with the same strategy order as the metadata service so
-	 * equivalent queries share one entry.
-	 */
 	public static metadata(track: Track): string | null {
 		if (track.isrc) {
 			return `metadata:${sha256(`isrc:${track.isrc.trim().toLowerCase()}`)}`;

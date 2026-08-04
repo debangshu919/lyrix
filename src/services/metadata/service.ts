@@ -8,11 +8,6 @@ import {
 import { getMetadataFromUrl } from "./url";
 
 export class MetadataService {
-	/*
-	 * Gets the track metadata based on the provided track info.
-	 * @param trackInfo - The track info to get the metadata for.
-	 * @returns The track metadata, or null if no metadata could be found.
-	 */
 	public static async getTrackMetadata(
 		trackInfo: Track,
 	): Promise<TrackMetadata | null> {
