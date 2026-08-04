@@ -110,7 +110,7 @@ test("translates synced lyrics preserving timestamps", async () => {
 	mock.method(
 		TranslationService,
 		"translateSyncedLines",
-		async (lines, _to, _from, config) =>
+		async (lines, _to, _from, _config) =>
 			lines.map((line, index) => ({
 				text: `Ligne ${index + 1}`,
 				startTime: line.startTime,
