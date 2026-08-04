@@ -123,7 +123,8 @@ test("caches translations across calls", async () => {
 		translate: 1,
 	});
 	assert.deepEqual(second, first);
-	assert.deepEqual(first.lyrics, [
+	assert.deepEqual(first.lyrics, ["First line", "Second line"]);
+	assert.deepEqual(first.translatedLyrics, [
 		"translated: First line",
 		"translated: Second line",
 	]);
@@ -153,9 +154,13 @@ test("keeps synced timestamps when serving cached translations", async () => {
 
 	assert.equal(calls.translate, 1);
 	assert.deepEqual(second.syncedLyrics, [
+		{ text: "First line", startTime: 1.25 },
+	]);
+	assert.deepEqual(second.lyrics, ["First line"]);
+	assert.deepEqual(second.translatedSyncedLyrics, [
 		{ text: "translated: First line", startTime: 1.25 },
 	]);
-	assert.deepEqual(second.lyrics, ["translated: First line"]);
+	assert.deepEqual(second.translatedLyrics, ["translated: First line"]);
 });
 
 test("does not cache provider failures", async () => {
