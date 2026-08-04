@@ -17,10 +17,9 @@
   },
   "license": "MIT",
   "author": "Debangshu Das",
-  "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc && node scripts/rewrite-esm-imports.mjs",
+    "build": "tsc",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
