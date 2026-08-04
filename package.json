@@ -24,9 +24,10 @@
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
-    "format": "biome format --write src tests",
-    "lint": "biome check src tests",
-    "check": "biome check --write src tests",
+    "format": "biome format --write src tests examples",
+    "format:check": "biome format src tests examples",
+    "lint": "biome lint src tests examples",
+    "check": "biome check --write src tests examples",
     "test": "pnpm build && node --test tests/unit/*.test.mjs tests/metadata.test.mjs tests/lyrics.test.mjs"
   },
   "devDependencies": {

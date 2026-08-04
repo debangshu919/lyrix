@@ -6,7 +6,7 @@
 		"useIgnoreFile": false
 	},
 	"files": {
-		"includes": ["src/**", "tests/**"],
+		"includes": ["src/**", "tests/**", "examples/**"],
 		"ignoreUnknown": false
 	},
 	"formatter": {
@@ -16,7 +16,10 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"preset": "recommended"
+			"preset": "recommended",
+			"complexity": {
+				"noStaticOnlyClass": "off"
+			}
 		}
 	},
 	"javascript": {

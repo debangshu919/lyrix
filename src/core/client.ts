@@ -46,6 +46,9 @@ export class LyrixClient {
 				if (result) return result;
 			} catch {}
 		}
-		throw new NoLyricsFoundError(track.trackName ?? "unknown", track.artistName ?? "unknown");
+		throw new NoLyricsFoundError(
+			track.trackName ?? "unknown",
+			track.artistName ?? "unknown",
+		);
 	}
 }
