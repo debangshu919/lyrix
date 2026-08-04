@@ -14,6 +14,9 @@ importers:
       musicbrainz-api:
         specifier: ^1.2.1
         version: 1.2.1
+      openai:
+        specifier: ^7.3.0
+        version: 7.3.0
     devDependencies:
       '@biomejs/biome':
         specifier: 2.5.6
@@ -236,6 +239,27 @@ packages:
     resolution: {integrity: sha512-5ra5nkiv6be1lcIz7Skz7lFtlEK/1dBb4JXz5T6m42faermxLR39buqIxSBXrB2K2oY0qyNVMu8f1AdSZubUdw==}
     engines: {node: ^14.13.1 || >=16.0.0}
 
+  openai@7.3.0:
+    resolution: {integrity: sha512-FLnIAkDEP3grs+BSDpqxEWVR37yG97/hs95lajF8SnHuA5nqtssh0uJVXbPhODNEoZqar+nEd+fIeGJgwoLUmg==}
+    engines: {node: '>=22.0.0'}
+    peerDependencies:
+      '@aws-sdk/credential-provider-node': '>=3.972.0 <4'
+      '@smithy/hash-node': '>=4.3.0 <5'
+      '@smithy/signature-v4': '>=5.4.0 <6'
+      ws: ^8.18.0
+      zod: ^3.25 || ^4.0
+    peerDependenciesMeta:
+      '@aws-sdk/credential-provider-node':
+        optional: true
+      '@smithy/hash-node':
+        optional: true
+      '@smithy/signature-v4':
+        optional: true
+      ws:
+        optional: true
+      zod:
+        optional: true
+
   rate-limit-threshold@0.2.1:
     resolution: {integrity: sha512-WWn+uXLg0KMO/M9TaA4JzIAwvQ0aE87PM0pO4TVvCeHb3kXe82rOXLuUfIS9OZdxbYIca7quInuReAr27LMktQ==}
     engines: {node: ^14.13.1 || >=16.0.0}
@@ -398,6 +422,8 @@ snapshots:
       uuid: 14.0.1
     transitivePeerDependencies:
       - supports-color
+
+  openai@7.3.0: {}
 
   rate-limit-threshold@0.2.1: {}
 
