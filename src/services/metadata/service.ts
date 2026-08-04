@@ -1,4 +1,4 @@
-import { MusicBrainzApi, type IRecording, type RecordingIncludes } from 'musicbrainz-api';
+import { MusicBrainzApi} from 'musicbrainz-api';
 import type { Track } from '../../providers/provider';
 import type { TrackMetadata } from '../../types/metadata';
 
