@@ -1,4 +1,5 @@
-import type { LyricsLine } from "../providers/provider";
+import type { LyricsLine, LyricsProvider } from "../providers/provider";
+import type { CacheAdapter } from "../services/cache/adapter";
 import type { TrackMetadata } from "../types/metadata";
 
 export interface TranslationConfig {
@@ -8,11 +9,20 @@ export interface TranslationConfig {
 }
 
 export interface LyricsOptions {
-	cache?: boolean;
 	sync?: boolean;
 	translateTo?: string;
 	translateFrom?: string;
 	translation?: TranslationConfig;
+}
+
+export interface LyrixClientConfig {
+	providers: LyricsProvider[];
+	/*
+	 * Enables caching of metadata, lyrics and translations. `true` uses a
+	 * file cache in `.lyrix-cache/`; a custom `CacheAdapter` can be passed
+	 * to control storage.
+	 */
+	cache?: boolean | CacheAdapter;
 }
 
 export interface Lyrics {

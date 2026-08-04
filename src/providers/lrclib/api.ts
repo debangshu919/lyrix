@@ -4,11 +4,12 @@ import type { TrackMetadata } from "../../types/metadata";
 import type { LyricsProvider, LyricsResult } from "../provider";
 
 class LrcLibProvider implements LyricsProvider {
+	public readonly name = "lrclib";
+
 	constructor(private client: Client = new Client()) {}
 
 	private async fetchUnsyncedLyrics(
 		metadata: TrackMetadata,
-		_cache: boolean = false,
 	): Promise<LyricsResult | null> {
 		const lyrics = await this.client.getUnsynced({
 			track_name: metadata.trackName,
@@ -30,7 +31,6 @@ class LrcLibProvider implements LyricsProvider {
 
 	private async fetchSyncedLyrics(
 		metadata: TrackMetadata,
-		_cache: boolean = false,
 	): Promise<LyricsResult | null> {
 		const syncedLyrics = await this.client.getSynced({
 			track_name: metadata.trackName,
@@ -55,13 +55,10 @@ class LrcLibProvider implements LyricsProvider {
 		metadata: TrackMetadata,
 		options?: LyricsOptions,
 	): Promise<LyricsResult | null> {
-		if (!options) {
-			return this.fetchUnsyncedLyrics(metadata, false);
+		if (options?.sync) {
+			return this.fetchSyncedLyrics(metadata);
 		}
-		if (options.sync) {
-			return this.fetchSyncedLyrics(metadata, options.cache ?? false);
-		}
-		return this.fetchUnsyncedLyrics(metadata, options.cache ?? false);
+		return this.fetchUnsyncedLyrics(metadata);
 	}
 }
 

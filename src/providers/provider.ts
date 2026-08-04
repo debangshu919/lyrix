@@ -9,6 +9,7 @@ export interface Track {
 }
 
 export interface LyricsProvider {
+	name: string;
 	fetchLyrics: (
 		metadata: TrackMetadata,
 		options?: LyricsOptions,
