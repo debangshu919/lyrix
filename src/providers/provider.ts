@@ -22,6 +22,8 @@ export interface LyricsResult {
 	lyrics: string[];
 	synced?: boolean;
 	syncedLyrics?: LyricsLine[];
+	translatedLyrics?: string[];
+	translatedSyncedLyrics?: LyricsLine[];
 }
 
 export interface LyricsLine {

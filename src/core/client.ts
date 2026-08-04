@@ -85,26 +85,27 @@ export class LyrixClient {
 	}
 
 	/*
-	 * Rebuilds the lyrics result from translated lines. Synced lines keep
-	 * their timestamps and the plain lyrics are derived from them, so
-	 * timestamps and plain lines stay aligned.
+	 * Attaches translated lines to the lyrics result, keeping the originals.
+	 * Synced translations keep their timestamps and the plain translated
+	 * lyrics are derived from them, so timestamps and plain lines stay
+	 * aligned.
 	 */
 	private withTranslatedLines(
 		result: LyricsResult,
 		translated: string[],
 	): LyricsResult {
 		if (result.syncedLyrics && result.syncedLyrics.length > 0) {
-			const syncedLyrics = result.syncedLyrics.map((line, index) => ({
+			const translatedSyncedLyrics = result.syncedLyrics.map((line, index) => ({
 				text: translated[index] ?? line.text,
 				...(line.startTime === undefined ? {} : { startTime: line.startTime }),
 			}));
 			return {
 				...result,
-				syncedLyrics,
-				lyrics: syncedLyrics.map((line) => line.text),
+				translatedSyncedLyrics,
+				translatedLyrics: translatedSyncedLyrics.map((line) => line.text),
 			};
 		}
-		return { ...result, lyrics: translated };
+		return { ...result, translatedLyrics: translated };
 	}
 
 	/*

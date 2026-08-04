@@ -30,5 +30,7 @@ export interface Lyrics {
 	synced?: boolean;
 	lines: string[];
 	syncedLines?: LyricsLine[];
+	translatedLines?: string[];
+	translatedSyncedLines?: LyricsLine[];
 	provider?: string;
 }
