@@ -1,0 +1,191 @@
+name: Release
+
+# Publishes to npm using trusted publishing (OIDC). There are no npm tokens
+# anywhere in this workflow or in repository secrets.
+#
+# Required one-time setup on npmjs.com
+#   lyrix-js -> Settings -> Trusted Publisher -> GitHub Actions
+#     Organization or user: lyrixjs
+#     Repository:           lyrix
+#     Workflow filename:    release.yml
+#     Environment name:     release
+#     Allowed actions:      npm publish
+#   Then Settings -> Publishing access -> "Require two-factor authentication
+#   and disallow tokens", and revoke any leftover automation tokens.
+#
+# npm matches every field above exactly and case-sensitively, and it does not
+# validate the configuration until a publish is attempted. Renaming this file,
+# the repository, or the `environment:` below breaks publishing with ENEEDAUTH.
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: Version increment to apply
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      dry_run:
+        description: Verify and pack without pushing or publishing
+        required: false
+        default: false
+        type: boolean
+
+# Deny by default; the job opts in to the minimum it needs.
+permissions: {}
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Publish package
+    # Trusted publishing does not support self-hosted runners.
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Must match the "Environment name" configured on npmjs.com. Add required
+    # reviewers under Settings -> Environments -> release to gate releases.
+    environment: release
+    permissions:
+      contents: write # push the release commit and tag, create the GitHub Release
+      id-token: write # mint the OIDC token npm exchanges for a short-lived publish token
+    env:
+      # Inputs are passed through env rather than interpolated into run blocks.
+      RELEASE_TYPE: ${{ inputs.release_type }}
+
+    steps:
+      # Fails fast, before the repository is even cloned.
+      - name: Require main branch
+        if: github.ref_name != 'main'
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          echo "::error::Releases must run from main (got '$REF_NAME')."
+          exit 1
+
+      # Actions are pinned to immutable commit SHAs. A job holding id-token:
+      # write must not execute code resolved from a mutable tag.
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up pnpm
+        # No `version:` input on purpose: it is read from the packageManager
+        # field in package.json, keeping a single source of truth.
+        uses: pnpm/action-setup@ff378ebe6b225b0680b81c1ad4498ae0d1d3a5e3 # v6.0.10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          # Trusted publishing requires Node >= 22.14.0.
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          # Never restore a dependency cache in a release build.
+          package-manager-cache: false
+
+      - name: Verify toolchain supports trusted publishing
+        run: |
+          required=11.5.1
+          actual="$(npm --version)"
+          if [ "$(printf '%s\n%s\n' "$required" "$actual" | sort -V | head -n1)" != "$required" ]; then
+            echo "::error::Trusted publishing requires npm >= $required (found $actual)."
+            exit 1
+          fi
+          echo "node $(node --version), npm $actual, pnpm $(pnpm --version)"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Build and test once. The exact artifact verified here is the one
+      # published below, so publish runs with --ignore-scripts.
+      - name: Build and test
+        run: pnpm run clean && pnpm test
+
+      - name: Bump version
+        id: version
+        run: |
+          pnpm version "$RELEASE_TYPE" --no-git-tag-version >/dev/null
+          version="$(node -p 'require("./package.json").version')"
+          name="$(node -p 'require("./package.json").name')"
+          {
+            echo "name=$name"
+            echo "version=$version"
+            echo "tag=v$version"
+          } >> "$GITHUB_OUTPUT"
+          echo "Releasing $name@$version"
+
+      - name: Verify release is publishable
+        env:
+          NAME: ${{ steps.version.outputs.name }}
+          VERSION: ${{ steps.version.outputs.version }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "::error::Tag $TAG already exists on origin."
+            exit 1
+          fi
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "::error::$NAME@$VERSION is already published, and npm versions are immutable."
+            exit 1
+          fi
+
+      # Logs exactly what will ship. `npm pack` never contacts the registry.
+      - name: Inspect tarball contents
+        run: npm pack --dry-run --ignore-scripts
+
+      - name: Commit and tag release
+        if: ${{ !inputs.dry_run }}
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package.json pnpm-lock.yaml
+          git commit -m "chore(release): $TAG"
+          git tag -a "$TAG" -m "$TAG"
+
+      # Pushed before publishing on purpose: an npm version is immutable and
+      # cannot be reclaimed, whereas git history can be corrected. If the
+      # publish below fails, recover by releasing the next patch version.
+      - name: Push release commit and tag
+        if: ${{ !inputs.dry_run }}
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: git push --atomic origin HEAD:refs/heads/main "refs/tags/$TAG"
+
+      # No NODE_AUTH_TOKEN. The npm CLI detects the OIDC environment, exchanges
+      # the id-token for a short-lived publish token, and attaches provenance
+      # automatically, so --provenance must not be passed.
+      - name: Publish to npm
+        if: ${{ !inputs.dry_run }}
+        run: npm publish --access public --ignore-scripts
+
+      - name: Create GitHub Release
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: gh release create "$TAG" --title "$TAG" --generate-notes --verify-tag
+
+      # Implicit success(): never claim a release that did not complete.
+      - name: Report outcome
+        if: steps.version.outputs.version != ''
+        env:
+          NAME: ${{ steps.version.outputs.name }}
+          VERSION: ${{ steps.version.outputs.version }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          {
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "### Dry run"
+              echo
+              echo "\`$NAME@$VERSION\` was verified and packed but not published."
+            else
+              echo "### Released \`$NAME@$VERSION\`"
+              echo
+              echo "- https://www.npmjs.com/package/$NAME/v/$VERSION"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

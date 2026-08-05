@@ -50,6 +50,9 @@ web_modules/
 # Optional npm cache directory
 .npm
 
+# npm registry auth: publishing uses OIDC, so this should never be committed
+.npmrc
+
 # Optional eslint cache
 .eslintcache
 
