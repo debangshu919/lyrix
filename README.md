@@ -6,8 +6,12 @@
 
 ### Multi-provider lyrics retrieval with AI-powered translation, caching, and type-safe APIs.
 
+[![npm](https://img.shields.io/npm/v/lyrix-js?style=flat-square)](https://www.npmjs.com/package/lyrix-js)
 [![CI](https://img.shields.io/github/actions/workflow/status/debangshu919/lyrix/ci.yml?style=flat-square&branch=main)](https://github.com/debangshu919/lyrix/actions)
 [![License](https://img.shields.io/github/license/debangshu919/lyrix?style=flat-square)](LICENSE)
+[![npm downloads](https://img.shields.io/npm/dm/lyrix-js?style=flat-square)](https://www.npmjs.com/package/lyrix-js)
+[![GitHub stars](https://img.shields.io/github/stars/debangshu919/lyrix?style=flat-square)](https://github.com/debangshu919/lyrix/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/debangshu919/lyrix?style=flat-square)](https://github.com/debangshu919/lyrix/issues)
 
 </div>
 
