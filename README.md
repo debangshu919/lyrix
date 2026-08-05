@@ -25,17 +25,17 @@
 ## Installation
 
 ```bash
-npm install lyrix
+npm install lyrix-js
 # or
-pnpm add lyrix
+pnpm add lyrix-js
 # or
-yarn add lyrix
+yarn add lyrix-js
 ```
 
 ## Quick Start
 
 ```ts
-import { LyrixClient, lrclibProvider } from "lyrix";
+import { LyrixClient, lrclibProvider } from "lyrix-js";
 
 const client = new LyrixClient({
   providers: [lrclibProvider],
@@ -176,7 +176,7 @@ Built-in adapters:
 | `MemoryCacheAdapter` | In-memory `Map` | `new MemoryCacheAdapter()` |
 
 ```ts
-import { LyrixClient, MemoryCacheAdapter, lrclibProvider } from "lyrix";
+import { LyrixClient, MemoryCacheAdapter, lrclibProvider } from "lyrix-js";
 
 const client = new LyrixClient({
   providers: [lrclibProvider],
