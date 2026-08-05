@@ -7,11 +7,11 @@
 ### Multi-provider lyrics retrieval with AI-powered translation, caching, and type-safe APIs.
 
 [![npm](https://img.shields.io/npm/v/lyrix-js?style=flat-square)](https://www.npmjs.com/package/lyrix-js)
-[![CI](https://img.shields.io/github/actions/workflow/status/debangshu919/lyrix/ci.yml?style=flat-square&branch=main)](https://github.com/debangshu919/lyrix/actions)
-[![License](https://img.shields.io/github/license/debangshu919/lyrix?style=flat-square)](LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/lyrixjs/lyrix/ci.yml?style=flat-square&branch=main)](https://github.com/lyrixjs/lyrix/actions)
+[![License](https://img.shields.io/github/license/lyrixjs/lyrix?style=flat-square)](LICENSE)
 [![npm downloads](https://img.shields.io/npm/dm/lyrix-js?style=flat-square)](https://www.npmjs.com/package/lyrix-js)
-[![GitHub stars](https://img.shields.io/github/stars/debangshu919/lyrix?style=flat-square)](https://github.com/debangshu919/lyrix/stargazers)
-[![GitHub issues](https://img.shields.io/github/issues/debangshu919/lyrix?style=flat-square)](https://github.com/debangshu919/lyrix/issues)
+[![GitHub stars](https://img.shields.io/github/stars/lyrixjs/lyrix?style=flat-square)](https://github.com/lyrixjs/lyrix/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/lyrixjs/lyrix?style=flat-square)](https://github.com/lyrixjs/lyrix/issues)
 
 </div>
 
@@ -239,7 +239,7 @@ Versioned cache entries are invalidated when the internal schema changes, so bum
 ## Development
 
 ```bash
-git clone https://github.com/debangshu919/lyrix.git
+git clone https://github.com/lyrixjs/lyrix.git
 cd lyrix
 pnpm install
 pnpm build
