@@ -7,13 +7,13 @@
     "lyrics",
     "translation"
   ],
-  "homepage": "https://github.com/lyrixjs/lyrix#readme",
+  "homepage": "https://github.com/lyrixjs/lyrix-js#readme",
   "bugs": {
-    "url": "https://github.com/lyrixjs/lyrix/issues"
+    "url": "https://github.com/lyrixjs/lyrix-js/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lyrixjs/lyrix.git"
+    "url": "git+https://github.com/lyrixjs/lyrix-js.git"
   },
   "license": "MIT",
   "author": "Debangshu Das",
